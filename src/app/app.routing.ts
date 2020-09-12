@@ -6,11 +6,17 @@ import { CityCardResolver } from './city-card/city-card-resolver.service';
 import { WeatherComponent } from './weather/weather.component';
 import { ErrorComponent } from './error/error.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { ForecastComponent } from './forecast/forecast.component';
 
 const APP_ROUTER: Routes = [
   {
     path: '',
     component: WeatherComponent,
+    resolve: { weather: ResolveLocationService },
+  },
+  {
+    path: 'forecast',
+    component: ForecastComponent,
     resolve: { weather: ResolveLocationService },
   },
   {

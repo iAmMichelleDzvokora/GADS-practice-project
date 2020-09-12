@@ -2,11 +2,12 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { Weather } from '../weather/weather';
 import { apiConfig } from '../config';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-city-card',
   templateUrl: './city-card.component.html',
-  styleUrls: ['./city-card.component.scss']
+  styleUrls: ['./city-card.component.scss'],
 })
 export class CityCardComponent implements OnInit {
   @Input() weather: Weather;
@@ -16,11 +17,16 @@ export class CityCardComponent implements OnInit {
   measureOfWindSpeed: string;
   measureOfPressure: string;
 
+  constructor(private router: Router) {}
+
   ngOnInit() {
     const measurementUnits = apiConfig.measurementUnits[this.unitSystem];
 
     this.measureOfTemp = measurementUnits.temperature;
     this.measureOfWindSpeed = measurementUnits.windSpeed;
     this.measureOfPressure = measurementUnits.pressure;
+  }
+  forecast() {
+    this.router.navigateByUrl('/forecast');
   }
 }

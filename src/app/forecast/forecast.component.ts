@@ -14,7 +14,6 @@ export class ForecastComponent implements OnChanges, OnDestroy {
 
   private subscribers: any = {};
   firstWeekForecast: Forecast[];
-  secondWeekForecast: Forecast[];
   isSecondWeekForecastListShow: boolean = false;
   forecastDays: number;
 
@@ -33,7 +32,6 @@ export class ForecastComponent implements OnChanges, OnDestroy {
         );
 
         this.firstWeekForecast = forecastData.slice(0, 7);
-        this.secondWeekForecast = forecastData.slice(7, 14);
 
         this.recalculateForecastDays();
       });
@@ -47,11 +45,10 @@ export class ForecastComponent implements OnChanges, OnDestroy {
 
   private recalculateForecastDays(): void {
     const firstWeekForecastLength = this.firstWeekForecast.length;
-    const secondWeekForecastLength = this.secondWeekForecast.length;
 
     this.forecastDays = !this.isSecondWeekForecastListShow
       ? firstWeekForecastLength
-      : firstWeekForecastLength + secondWeekForecastLength;
+      : firstWeekForecastLength;
   }
 
   ngOnDestroy(): void {
