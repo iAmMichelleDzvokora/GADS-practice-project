@@ -1,5 +1,5 @@
 <div class="city-card">
-  <h2 class="city-card__header"> Current weather and <button (click)=forecast()>Forecast</button> in your city</h2>
+  <h2 class="city-card__header"> Current weather and Forecast in your city</h2>
   <div class="city-card__box">
     <div class="city-card__updated-label">
       last update at:
@@ -57,8 +57,17 @@
     </div>
     <div class="divider"></div>
     <div class="city-card__forecasts">
-      <app-forecast [measureOfTemp]="measureOfTemp" [cityName]="weather.city">
-      </app-forecast>
+      <div class="forecast" *ngIf="firstWeekForecast?.length > 0">
+        <h2 class="forecast__header">Forecast for {{forecastDays}} days</h2>
+        <ul class="forecast__list forecast__list--first-week">
+          <app-forecast-item *ngFor="let dayOfFirstWeek of firstWeekForecast" [currentDay]="dayOfFirstWeek.currentDay"
+            [date]="dayOfFirstWeek.date" [temperatureDay]="dayOfFirstWeek.temperatureDay"
+            [temperatureNight]="dayOfFirstWeek.temperatureNight" [iconClassname]="dayOfFirstWeek.iconClassname"
+            [measureOfTemp]="measureOfTemp" [description]="dayOfFirstWeek.description">
+          </app-forecast-item>
+        </ul>
+      </div>
+
     </div>
   </div>
 </div>

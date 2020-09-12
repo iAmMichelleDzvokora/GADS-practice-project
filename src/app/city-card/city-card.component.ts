@@ -3,6 +3,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { Weather } from '../weather/weather';
 import { apiConfig } from '../config';
 import { Router } from '@angular/router';
+import { Forecast } from '../forecast/forecast';
+import { ForecastService } from '../forecast/forecast.service';
+import { SearchBarComponent } from '../search-bar/search-bar.component';
 
 @Component({
   selector: 'app-city-card',
@@ -16,8 +19,17 @@ export class CityCardComponent implements OnInit {
   measureOfTemp: string;
   measureOfWindSpeed: string;
   measureOfPressure: string;
+  @Input() cityName: string;
 
-  constructor(private router: Router) {}
+  private subscribers: any = {};
+  firstWeekForecast: Forecast[];
+  isSecondWeekForecastListShow: boolean = false;
+  forecastDays: number;
+
+  constructor(
+    private router: Router,
+    private forecastService: ForecastService
+  ) {}
 
   ngOnInit() {
     const measurementUnits = apiConfig.measurementUnits[this.unitSystem];
@@ -26,7 +38,40 @@ export class CityCardComponent implements OnInit {
     this.measureOfWindSpeed = measurementUnits.windSpeed;
     this.measureOfPressure = measurementUnits.pressure;
   }
-  forecast() {
-    this.router.navigateByUrl('/forecast');
+
+  ngOnChanges(): void {
+    if (this.subscribers.forecast) {
+      this.subscribers.forecast.unsubscribe();
+    }
+
+    this.subscribers.forecast = this.forecastService
+      .getForecastByCity(this.weather.city)
+      .subscribe((forecast) => {
+        const forecastData = forecast.map((forecastByDay) =>
+          this.forecastService.handleResponseForecastData(forecastByDay)
+        );
+
+        this.firstWeekForecast = forecastData.slice(0, 7);
+        console.log(forecastData);
+        this.recalculateForecastDays();
+      });
+  }
+
+  toggleSecondWeekForecastList(): void {
+    this.isSecondWeekForecastListShow = !this.isSecondWeekForecastListShow;
+
+    this.recalculateForecastDays();
+  }
+
+  private recalculateForecastDays(): void {
+    const firstWeekForecastLength = this.firstWeekForecast.length;
+
+    this.forecastDays = !this.isSecondWeekForecastListShow
+      ? firstWeekForecastLength
+      : firstWeekForecastLength;
+  }
+
+  ngOnDestroy(): void {
+    this.subscribers.forecast.unsubscribe();
   }
 }

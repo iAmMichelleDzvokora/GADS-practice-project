@@ -1,6 +1,6 @@
 {
   "name": "weather-app-angular",
-  "short_name": "weather report",
+  "short_name": "SmashIt Weather",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
